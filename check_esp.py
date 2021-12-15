@@ -1,10 +1,8 @@
-import sys
 import pandas as pd
 import os
 import re
 import numpy as np
 from date import random_date, day_checker
-from csv_converter import convert_to_csv
 
 day = day_checker()
 regex = re.compile(r'^[\d]+.wav$')
@@ -21,23 +19,14 @@ def get_path():
     return folder
 
 
-def find_excel_filenames(suffix=".xlsm"):
-    global valid_path
-    filenames = os.listdir(valid_path)
-    return [os.path.join(valid_path, filename) for filename in filenames if filename.endswith(suffix)]
+# Getting a list of all the .wav recorded audiofiles
 
-
-valid_path = get_path()
-
-
-def match_recorded_files():
-    global valid_path
-
+def list_audiofiles(path):
     audiofiles = []
     f = open(f"no_match_{day}.txt", "w+")
     count = 1
 
-    for root, dirs, files in os.walk(valid_path, topdown=False):
+    for root, dirs, files in os.walk(path, topdown=False):
         for file in files:
             if regex.match(file):
                 audiofiles.append(int(file.replace('.wav', '')))
@@ -57,10 +46,10 @@ def match_recorded_files():
     return audiofiles
 
 
-# MERGE
+# Merging the 2 csv files
 
-def generate_csv(first_file, second_file):
-    files = match_recorded_files()
+def merge_csvs(path, first_file, second_file):
+    files = list_audiofiles(path)
 
     csv_1 = pd.read_csv(first_file, low_memory=False)
     csv_2 = pd.read_csv(second_file, low_memory=False)
@@ -92,7 +81,7 @@ def generate_csv(first_file, second_file):
             date_rec.append(csv_1['Rec Date'].loc[i])
             date_filter.append('')
 
-    # DOUBLE CHECK
+    # Double checking the merge was done correctly
     errors = 0
     for i in range(len(rec)):
         try:
@@ -112,8 +101,3 @@ def generate_csv(first_file, second_file):
             {'Rec Status': rec, 'Rec Date': date_rec, 'Filter': date_filter})
 
         match.to_csv(f'resultado_{day}.csv', index=False)
-
-
-if __name__ == '__main__':
-    file_1, file_2 = map(lambda x: convert_to_csv(x), find_excel_filenames())
-    generate_csv(file_1, file_2)
