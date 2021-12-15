@@ -25,7 +25,7 @@ def get_path():
 
 def list_audiofiles(path):
     audiofiles = []
-    f = open(f"no_match_{day}.txt", "w+")
+    f = open(f"Results/no_match_{day}.txt", "w+")
     count = 1
 
     for root, dirs, files in os.walk(path, topdown=False):
@@ -35,15 +35,17 @@ def list_audiofiles(path):
             elif file.startswith('.') or not (file.endswith('.wav')):
                 pass
             else:
-                with open(f'no_match_{day}.txt', 'a') as f:
+                with open(f'Results/no_match_{day}.txt', 'a') as f:
                     f.write(f"{count}. {file if not file[0] == '.' else ''}\n")
                     count += 1
             f.close()
 
-    if os.stat(f"{os.getcwd()}/no_match_{day}.txt").st_size == 0:
-        os.remove(f"no_match_{day}.txt")
+    if os.stat(f"{os.getcwd()}/Results/no_match_{day}.txt").st_size == 0:
+        os.remove(f"Results/no_match_{day}.txt")
     else:
-        print(f'Algunos audios no se encontraron en el Excel. Revisa el archivo \"no_match_{day}.txt\"')
+        print(
+            f'Algunos audios no se encontraron en el Excel. Revisa el archivo \"no_match_{day}.txt\" '
+            f'en la carpeta Results')
 
     return audiofiles
 
@@ -75,7 +77,7 @@ def merge_csvs(path, first_file, second_file):
             else:
                 error = f'Al parecer SIDE ID: {csv_1["SIDE ID"].loc[i]} no está grabado'
                 print(error)
-                with open(f'no_match_{day}.txt', 'a') as f:
+                with open(f'Results/no_match_{day}.txt', 'a') as f:
                     f.write(error)
                 date_filter.append('ERROR! NOT FOUND')
         else:
@@ -102,4 +104,4 @@ def merge_csvs(path, first_file, second_file):
         match = pd.DataFrame(
             {'Rec Status': rec, 'Rec Date': date_rec, 'Filter': date_filter})
 
-        match.to_csv(f'resultado_{day}.csv', index=False)
+        match.to_csv(f'Results/resultado_{day}.csv', index=False)
