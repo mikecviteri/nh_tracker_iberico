@@ -6,18 +6,8 @@ import os
 count = 1
 
 
-def convert_to_csv():
-    valid = ['.xlsx', '.xlsm', '.xltx', '.xltm']
-
-    while True:
-        path = input('Ingresa la dirección del archivo Excel a convertir')
-        if any(path.endswith(extension) for extension in valid):
-            excel = openpyxl.load_workbook(path)
-            break
-        else:
-            print('No es una dirección/archivo de Excel válido')
-            continue
-
+def convert_to_csv(path):
+    excel = openpyxl.load_workbook(path)
     filename = os.path.splitext(os.path.basename(path))[0]
     sheet = excel.active
 
@@ -28,9 +18,7 @@ def convert_to_csv():
     for r in sheet.rows:
         col.writerow([cell.value for cell in r])
 
-    df = pd.DataFrame(pd.read_csv(f"{filename}.csv", low_memory=False))
-
-    return df
+    return f'{os.path.join(os.getcwd(), filename)}.csv'
 
 
 def check_names():
