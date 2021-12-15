@@ -6,18 +6,13 @@ import os
 count = 1
 
 
-def convert_to_csv():
-    valid = ['.xlsx', '.xlsm', '.xltx', '.xltm']
+def find_excel_filenames(valid_path, suffix=".xlsm"):
+    filenames = os.listdir(valid_path)
+    return [os.path.join(valid_path, filename) for filename in filenames if filename.endswith(suffix)]
 
-    while True:
-        path = input('Ingresa la dirección del archivo Excel a convertir')
-        if any(path.endswith(extension) for extension in valid):
-            excel = openpyxl.load_workbook(path)
-            break
-        else:
-            print('No es una dirección/archivo de Excel válido')
-            continue
 
+def convert_to_csv(path):
+    excel = openpyxl.load_workbook(path)
     filename = os.path.splitext(os.path.basename(path))[0]
     sheet = excel.active
 
@@ -28,29 +23,11 @@ def convert_to_csv():
     for r in sheet.rows:
         col.writerow([cell.value for cell in r])
 
-    df = pd.DataFrame(pd.read_csv(f"{filename}.csv", low_memory=False))
-
-    return df
+    return f'{os.path.join(os.getcwd(), filename)}.csv'
 
 
-def check_names():
-    while True:
-        global count
-        path = input(f'Ingresa el archivo csv {count}')
-        if os.path.exists(os.path.dirname(path) and path.endswith('.csv')):
-            count += 1
-            return path
-            break
-        else:
-            print("No es un directorio/archivo válido")
-            continue
-
-
-def check_csv_shape():
+def check_csv_shape(path_1, path_2):
     correct = 0
-
-    path_1 = check_names()
-    path_2 = check_names()
 
     csv_1 = pd.read_csv(path_1, low_memory=False)
     csv_2 = pd.read_csv(path_2, low_memory=False)
@@ -65,5 +42,7 @@ def check_csv_shape():
                 correct += 1
         if correct == csv_1.shape[0]:
             print('OK. Todos los valores coinciden')
+            return True
     else:
         print("El número de filas no es igual. Por favor revisa tus archivos")
+        return False
