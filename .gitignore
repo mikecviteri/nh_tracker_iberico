@@ -1,4 +1,4 @@
-.DS_Store
+**/.DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
@@ -9,6 +9,7 @@ Thumbs.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
 
 # C extensions
 *.so
@@ -30,4 +31,5 @@ var/
 
 *.csv
 *.txt
+
 
