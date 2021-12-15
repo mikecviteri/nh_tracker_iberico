@@ -20,14 +20,14 @@ def convert_to_csv(path):
     filename = os.path.splitext(os.path.basename(path))[0]
     sheet = excel.active
 
-    col = csv.writer(open(f"{filename}.csv",
+    col = csv.writer(open(f"csvs/{filename}.csv",
                           'w',
                           newline="", encoding='utf-8-sig'))
 
     for r in sheet.rows:
         col.writerow([cell.value for cell in r])
 
-    return f'{os.path.join(os.getcwd(), filename)}.csv'
+    return f'{os.path.join(os.getcwd(), "csvs/" + filename)}.csv'
 
 
 # Comparing both csv files have the same size/data
