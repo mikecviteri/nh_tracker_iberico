@@ -6,10 +6,14 @@ import os
 count = 1
 
 
+# Listing all the Excel files within the directory
+
 def find_excel_filenames(valid_path, suffix=".xlsm"):
     filenames = os.listdir(valid_path)
     return [os.path.join(valid_path, filename) for filename in filenames if filename.endswith(suffix)]
 
+
+# Converting Excel file to csv
 
 def convert_to_csv(path):
     excel = openpyxl.load_workbook(path)
@@ -25,6 +29,8 @@ def convert_to_csv(path):
 
     return f'{os.path.join(os.getcwd(), filename)}.csv'
 
+
+# Comparing both csv files have the same size/data
 
 def check_csv_shape(path_1, path_2):
     correct = 0

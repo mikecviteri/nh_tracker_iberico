@@ -8,6 +8,8 @@ day = day_checker()
 regex = re.compile(r'^[\d]+.wav$')
 
 
+# Check if a given path exists in local
+
 def get_path():
     while True:
         folder = input('Ingresa la dirección completa de la carpeta con los audiofiles')

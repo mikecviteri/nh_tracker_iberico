@@ -44,4 +44,4 @@
 44. 04209_ALT01.wav
 45. 11361_ALT01.wav
 46. 11329_ALT01.wav
-Al parecer 17 no está grabado
+Al parecer SIDE ID: 17 no está grabado
