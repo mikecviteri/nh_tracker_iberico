@@ -42,4 +42,3 @@ def day_checker():
             print("No es un número")
             continue
     return day
-
