@@ -75,15 +75,14 @@ def merge_csvs(path, first_file, second_file):
             if csv_1['SIDE ID'].loc[i] in files:
                 date_filter.append(random_date(day))
             else:
-                error = f'Al parecer SIDE ID: {csv_1["SIDE ID"].loc[i]} no está grabado'
-                print(error)
-                with open(f'Results/no_match_{day}.txt', 'a') as f:
-                    f.write(error)
-                date_filter.append('ERROR! NOT FOUND')
+                date_filter.append('')
         else:
             rec.append(csv_1['Rec Status'].loc[i])
             date_rec.append(csv_1['Rec Date'].loc[i])
-            date_filter.append('')
+            if csv_1['SIDE ID'].loc[i] in files:
+                date_filter.append(random_date(day))
+            else:
+                date_filter.append('')
 
     # Double checking the merge was done correctly
     errors = 0
