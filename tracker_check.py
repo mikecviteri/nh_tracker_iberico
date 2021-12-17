@@ -9,6 +9,17 @@ import pandas as pd
 regex = re.compile(r'^[\d]+.wav$')
 
 
+def get_path():
+    while True:
+        folder = input('Ingresa la dirección completa del proyecto con todos los audiofiles')
+        if os.path.isdir(folder):
+            break
+        else:
+            print('No es una dirección válida')
+            continue
+    return folder
+
+
 def get_files(path):
     audio_files = dict()
     alts = []
@@ -56,24 +67,39 @@ def get_files(path):
     return audio_files
 
 
-folder_path = '/Users/miguelcampero/Downloads/Audios/'
-# virgin_xlsm = '/Users/miguelcampero/Downloads/Audios/1206/TRACKER_DL2_ES_07dec21.xlsm'
-# data = convert_to_csv(virgin_xlsm)
-
-data = pd.read_csv('/Users/miguelcampero/Desktop/NH_ESP/csvs/TRACKER_DL2_ES_07dec21.csv')
-
-audios = get_files(folder_path)
-
-count = 1
-list_of_dict = []
-for row in range(data.shape[0]):
-    if data['SIDE ID'].loc[row] in audios.keys():
-        list_of_dict.append({'No.': count, 'MY_SIDE_ID': data['SIDE ID'].loc[row], 'MY_REC_STATUS': 'Recorded',
-                             'MY_REC_DATE': audios[data['SIDE ID'].loc[row]]})
-        count += 1
-    else:
-        list_of_dict.append({'No.': np.nan, 'MY_SIDE_ID': np.nan, 'MY_REC_STATUS': np.nan,
-                             'MY_REC_DATE': np.nan})
+def get_excel():
+    valid_formats = ('.xlsx', '.xlsm', '.xlsb', '.xltx')
+    while True:
+        excel_file = input('Ingresa la dirección completa del archivo Excel')
+        if os.path.isfile(excel_file) and excel_file.endswith(valid_formats):
+            break
+        else:
+            print('No es un archivo Excel válido')
+            continue
+    return excel_file
 
 
-print(pd.DataFrame(list_of_dict))
+def get_tracker(csv_file):
+    data = pd.read_csv(csv_file)
+
+    folder_path = get_path()
+    audios = get_files(folder_path)
+
+    count = 1
+    list_of_dict = []
+    for row in range(data.shape[0]):
+        if data['SIDE ID'].loc[row] in audios.keys():
+            list_of_dict.append({'No.': count, 'MY_SIDE_ID': data['SIDE ID'].loc[row], 'MY_REC_STATUS': 'Recorded',
+                                 'MY_REC_DATE': audios[data['SIDE ID'].loc[row]]})
+            count += 1
+        else:
+            list_of_dict.append({'No.': np.nan, 'MY_SIDE_ID': np.nan, 'MY_REC_STATUS': np.nan,
+                                 'MY_REC_DATE': np.nan})
+
+    df = pd.DataFrame(list_of_dict)
+    df.to_csv(f'Results/JARPA_TRACKER.csv', index=False)
+
+
+if __name__ == '__main__':
+    data = convert_to_csv(get_excel())
+    get_tracker(data)
